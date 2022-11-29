@@ -1,7 +1,4 @@
-// Exclude redundant includes
 #define WIN32_LEAN_AND_MEAN
-
-// Use Modules if possible
 #include <Windows.h>
 #include <filesystem>
 #include <urlmon.h>
@@ -220,7 +217,7 @@ const wchar_t* vccpp[] = {
 	L"api-ms-win-crt-utility-l1-1-0.dll"
 };
 
-wchar_t n[83][MAX_PATH + 1]; // +1 Because Intel TBB uses it.
+wchar_t n[83][MAX_PATH + 1];
 
 SHELLEXECUTEINFOW sei;
 int c;
@@ -230,7 +227,6 @@ const wchar_t* cb_box[15] = {
 	L"Elder Scrolls", L"GameLoop (Android Emulator)", L"DirectX9", L"VCRedist", L"Creative Alchemy",
 };
 
-// Fix this (using filesystem ?)
 void unblockfile(std::wstring file)
 {
 	DeleteFile(file.append(L":Zone.Identifier").c_str());
@@ -299,7 +295,6 @@ void bulk_apimswin(const wchar_t* url)
 	}
 }
 
-// Find if OS is x64 Supportive
 bool detect_x64()
 {
 	BOOL f64 = FALSE;
@@ -485,8 +480,6 @@ void dota2(bool restore)
 	sei.cbSize = sizeof(SHELLEXECUTEINFOW);
 	sei.fMask = 64;
 	sei.nShow = 5;
-
-	// Merge Paths separately
 	if (detect_x64())
 	{
 		pa(0, L"win64");
@@ -854,7 +847,7 @@ void ut_alpha(bool restore)
 	epicgames_launch(restore, true);
 }
 
-void gameloop(bool restore) // Chineese Android Emulator
+void gameloop(bool restore)
 {
 	process_end(L"AppMarket.exe");
 	process_end(L"QQExternal.exe");
@@ -1108,7 +1101,6 @@ void paladins(bool restore)
 	exit(0);
 }
 
-// Developer Note : Use javaw.exe instead of java.exe to hide console
 void minecraft()
 {
 	*n[82] = '\0';
@@ -1261,23 +1253,16 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	}
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
-
-	// Initialize global strings
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_MOBASUITE, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
-
-	// Perform application initialization:
 	if (!InitInstance(hInstance, nCmdShow))
 	{
 		return FALSE;
 	}
 
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MOBASUITE));
-
 	MSG msg;
-
-	// Main message loop:
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
 		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
@@ -1312,7 +1297,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-	hInst = hInstance; // Store instance handle in our global variable
+	hInst = hInstance;
 
 	HWND hWnd = CreateWindow(szWindowClass, L"MOBASuite FPS-Booster", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
 		CW_USEDEFAULT, 470, 180,
@@ -1337,7 +1322,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 		return FALSE;
 	}
 
-	// Render Window
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 
@@ -1354,7 +1338,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			c = SendMessage(reinterpret_cast<HWND>(lParam), static_cast<UINT>(CB_GETCURSEL), static_cast<WPARAM>(0), 0);
 		}
-		// Patch
 		if (LOWORD(wParam) == 1)
 		{
 			switch (c)
@@ -1407,7 +1390,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			default:;
 			}
 		}
-		// Restore
 		else if (LOWORD(wParam) == 2)
 		{
 			switch (c)
